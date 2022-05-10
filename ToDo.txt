@@ -1,0 +1,6 @@
+Un gameplay jouable 
+les combats 
+deplacement entre les cases
+probabilité de faire spawn un monstre lors du déplacement
+Faire le marchand # done
+couleurs terminal

@@ -1,8 +1,19 @@
+#region lecture
+def Reading(lecture):
+  test = "TXTS/" + lecture + ".txt"
+  print(test)
+  f = open(test,'r')
+  message = f.read()
+  print(message)
+  f.close()
+#end region
+
+#region fight
 class Attack:
   def __init__(self,name,dmg,crit_chance) -> None:
-      self.name = name
-      self.dmg = dmg
-      self.crit_chance = crit_chance
+    self.name = name
+    self.dmg = dmg
+    self.crit_chance = crit_chance
 
   def calculate_damage(self, entity = None):
     from random import randint
@@ -12,6 +23,10 @@ class Attack:
         return self.dmg *3
       return self.dmg *2
     return self.dmg
+
+#endregion
+
+#region entity
 
 class Entity:
   def __init__(self,name,hp,strength,defense):
@@ -60,7 +75,6 @@ class Entity:
     elif type(weapon) == Amulette:
       self.hp -= weapon.hp_bonus
 
-
 class Merchant(Entity):
   def __init__(self,items,name,money):
     super().__init__(name,150,40,10)
@@ -93,11 +107,12 @@ class Merchant(Entity):
     if choix == "y":
      self.buy_item(player)
     else:
-      pass  
-      
+      pass
+
 class Monster(Entity):
   def __init__(self,monster_type):
-    # Monstre basique 
+    # Monstre basique
+    self.count_boss = 0
     if monster_type == "Sbire IOT":
       super().__init__(monster_type,10,2,2)
       self.inventory.append(Item("Petite Potion Soin","heal",10,2))
@@ -152,15 +167,15 @@ class Monster(Entity):
 class Player(Entity):  
   def __init__(self,name,type_adventurer):
     self.type_adenturer = type_adventurer
-    if type_adventurer == "Guerrier":     ## bcp de vie , peu d'attack
+    if type_adventurer == "warrior":     ## bcp de vie , peu d'attack
       super().__init__(name,100,10,20)
       self.inventory.append(Weapon("Sword",10,5,1))
       self.inventory.append(Item("Potion de soin","heal",50,5))
-    elif type_adventurer == "Assassin":     # faire 3x les crits | moyen vie bcp d'attaque 
+    elif type_adventurer == "assassin":     # faire 3x les crits | moyen vie bcp d'attaque 
       super().__init__(name,50,20,15)
       self.inventory.append(Weapon("Dagger",5,30,1))    
       self.inventory.append(Item("Potion de soin","heal",50,5))
-    elif type_adventurer == "Archer":       #  son arme a bcp d'attaque
+    elif type_adventurer == "archer":       #  son arme a bcp d'attaque
       super().__init__(name,40,20,15)
       self.inventory.append(Weapon("Arc",20,20,1))
       self.inventory.append(Item("Potion de soin","heal",50,5))
@@ -181,7 +196,9 @@ class Player(Entity):
     elif type(item) == Item:
       item.use(self)
 
+#endregion
 
+#region item
 
 class Item:
   def __init__(self,name,effect,power,price):
@@ -226,13 +243,16 @@ class Amulette(Item):
     super().use(target)
     target.defense += self.defense
 
+#endregion
+
 #region map
+
 class Map():
-  def generate_map(self) :
+  def __init__(self) :
     # 0 = Wall, 1 = Random Fight, 2 = Danger Boss, 3 = Boss, 4 = Chest,
     # 5 = Start, 6 = Stairs, 7 = Merchant, 8 = Door, 9 = Goal
     #Map = 27 x 27
-    map = [
+    self.map = [
       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],#1
       [0,5,1,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],#2
       [0,0,0,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,4,1,1,1,0],#3
@@ -261,47 +281,66 @@ class Map():
       [0,1,1,1,1,1,1,1,1,1,1,1,8,8,1,1,1,1,1,1,1,1,1,1,1,1,0],#26
       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]#27
     ]
-    PosX = 1
-    PosY = 1
-    print("You are at the position :",PosX,";",PosY)
+    self.PosX = 1
+    self.PosY = 1
+    print("You are at the position :",self.PosX,";",self.PosY)
 
-  def moove_map(self):
+  def move_map(self):
     import msvcrt
-    self.action_map(PosX,PosY)
+    self.action_map(self.PosX,self.PosY)
     choice_direction = msvcrt.getch()
     if choice_direction == b"d": #Right
-      if self.wall_map(PosX,PosY) == False:
-        PosX+=1
+      if self.wall_map(self.PosX,self.PosY) == False:
+        self.PosX+=1
     elif choice_direction == b"q": #Left
-      if self.wall_map(PosX,PosY) == False:
-        PosX-=1
+      if self.wall_map(self.PosX,self.PosY) == False:
+        self.PosX-=1
     elif choice_direction == b"z": #Up
-      if self.wall_map(PosX,PosY) == False:
-        PosY+=1
+      if self.wall_map(self.PosX,self.PosY) == False:
+        self.PosY+=1
     elif choice_direction == b"s": #Down
-      if self.wall_map(PosX,PosY) == False:
-        PosY-=1
+      if self.wall_map(self.PosX,self.PosY) == False:
+        self.PosY-=1
 
   def action_map(self,X,Y):
+    from random import randint
     if self.map[X][Y] == 1:
-      #Generer un mob random
-      print("You walk peacefully")
+      random_number = randint(1,20)
+      if random_number == 1:
+        print("You encounter a monster")
+        #Commencer combat
+      else:
+        print("You walk peacefully")
     if self.map[X][Y] == 2:
       print("You feel something near you")
     if self.map[X][Y] == 3:
       print("You meet a boss")
+      #Commencer le combat
     if self.map[X][Y] == 4:
       print("You find a chest")
+      #Donne un item
     if self.map[X][Y] == 5:
       print("Here is the start of your story")
     if self.map[X][Y] == 6:
       print("You find stairs")
+      print("Do you want to take them ?")
+      print("yes ? no ?")
+      Answer = str(input())
+      if Answer == "yes":
+        if self.PosX == 6:
+          self.PosX = 23
+          self.PosY = 15
+        else:
+          self.PosX = 6
+          self.PosY = 17
     if self.map[X][Y] == 7:
       print("You encounter a merchant")
+      Merchant.buy_item()
     if self.map[X][Y] == 8:
-      print()
+      self.door_map()
     if self.map[X][Y] == 9:
       print("You finally locate Janin")
+      #Start combat
 
   def wall_map(self,X,Y):
     if self.map[X][Y] == 0:
@@ -310,5 +349,46 @@ class Map():
     else:
       return False
 
+  def door_map(self):
+    if Monster.count_boss == 4:
+        print("You killed the 4 bosses, now you can open the door")
+        return False
+    else:
+      print("The door seems locked")
+      self.PosX-=1
+      return True
+
 #endregion
 
+
+#region Gameplay
+def ennemy_attack():
+  pass
+def main():
+  Win = 0
+  map = Map()
+
+  print("What is your name ? ")
+  Nom = str(input())
+  print("Choose a class between :'Assassin','Archer' and 'Warrior' ")
+  type_adventurer = str(input()).lower()
+  if type_adventurer != "assassin" and type_adventurer != "archer" and type_adventurer != "warrior":
+    print("Error, no such class")
+    exit()
+  P = Player(Nom,type_adventurer)
+  print("Your name is ",Nom, "and you choose the class ", type_adventurer)
+  print("")
+  print("")
+  print("you got :" ,P.hp, "hp, a strength of " ,P.strength , " and", P.defense, "point in defense.")
+  print("you have :")
+  for item in P.inventory:
+    print(item.name)
+  while P.hp >= 0 or Win != 1:
+    map.move_map()
+    
+
+  print("End of the game")
+  
+#endregion
+
+main()
