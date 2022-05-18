@@ -7,6 +7,7 @@ def Reading(lecture):
   print(message)
   f.close()
 #end region
+Inventaire = []
 
 #region fight
 class Attack:
@@ -163,7 +164,6 @@ class Monster(Entity):
     from random import randint
     return self.inventory[randint(0,len(self.inventory))]
 '''
-
 class Player(Entity):  
   def __init__(self,name,type_adventurer):
     self.type_adenturer = type_adventurer
@@ -359,12 +359,24 @@ class Map():
       return True
 
 #endregion
+#region Fight
 
+def Fight():
+  pass
+
+#endregion
 
 #region Gameplay
+def affichage_inventaire(P):
+  Inventaire = []
+  for item in P.inventory:      # Affichage de l'inventaire du joueur
+    Inventaire.append(item.name)
+    #print(item.name)
+  return(Inventaire)
 def ennemy_attack():
   pass
 def main():
+  import keyboard
   Win = 0
   map = Map()
 
@@ -379,15 +391,29 @@ def main():
   print("Your name is ",Nom, "and you choose the class ", type_adventurer)
   print("")
   print("")
-  print("you got :" ,P.hp, "hp, a strength of " ,P.strength , " and", P.defense, "point in defense.")
+  print("you got :" ,P.hp, "hp, a strength of" ,P.strength , "and", P.defense, "point in defense.")
   print("you have :")
-  for item in P.inventory:
-    print(item.name)
+  affichage_inventaire(P)
+  #for item in P.inventory:      # Affichage de l'inventaire du joueur
+  #  Inventaire.append(item.name)
+    #print(item.name)
+  print(Inventaire)
+  Tuto = "Les touches sont : I pour afficher l'inventaire , E pour les stats et H pour afficher ce menu"
+  print(Tuto)
   while P.hp >= 0 or Win != 1:
+    if keyboard.is_pressed("i"):
+      P.open_inventory()
+    if keyboard.is_pressed("h"):
+      print(Tuto)
+ #   if keyboard.read_key() ==":i" or keyboard.read_key() == "I":
+ #     print(Inventaire)  # affiche l'inventaire
+ #  if keyboard.read_key() =="h" or keyboard.read_key() == "H":
+ #     print(Tuto)     # affiche le tuto 
     map.move_map()
+
+    
     
 
-  print("End of the game")
   
 #endregion
 
