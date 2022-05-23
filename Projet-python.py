@@ -303,31 +303,31 @@ class Map():
       if self.wall_map(self.PosX-1,self.PosY) == False:
         self.PosX-=1
       else:
-        print("A wall is blocking the road")
+        print("\033[1;35;40m A wall is blocking the road")
 
   def action_map(self,X,Y):
     from random import randint
     if self.map[X][Y] == 1:
       random_number = randint(1,20)
       if random_number == 1:
-        print("You encounter a monster")
+        print("\033[1;34;40m You encounter a monster")
         #Commencer combat
       else:
-        print("You walk peacefully")
+        print("\033[1;34;40m You walk peacefully")
     if self.map[X][Y] == 2:
       print("You feel something near you")
     if self.map[X][Y] == 3:
-      print("You meet a boss")
+      print("\033[1;31;40m You meet a boss")
       #Commencer le combat
     if self.map[X][Y] == 4:
-      print("You find a chest")
+      print("\033[1;33;40m You find a chest")
       #Donne un item
     if self.map[X][Y] == 5:
-      print("Here is the start of your story")
+      print("\033[1;32;40m Here is the start of your story")
     if self.map[X][Y] == 6:
-      print("You find stairs")
-      print("Do you want to take them ?")
-      print("yes ? no ?")
+      print("\033[1;32;40m You find stairs")
+      print("\033[1;32;40m Do you want to take them ?")
+      print("\033[1;32;40m yes ? no ?")
       Answer = str(input())
       if Answer == "yes":
         if self.PosX == 12:
@@ -338,7 +338,7 @@ class Map():
           self.PosY = 16
         print("You are at the position :",self.PosX,";",self.PosY)
     if self.map[X][Y] == 7:
-      print("You encounter a merchant")
+      print("\033[1;32;40m You encounter a merchant")
       Merchant.buy_item()
     if self.map[X][Y] == 8:
       self.door_map()
