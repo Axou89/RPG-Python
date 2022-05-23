@@ -251,56 +251,59 @@ class Map():
   def __init__(self) :
     # 0 = Wall, 1 = Random Fight, 2 = Danger Boss, 3 = Boss, 4 = Chest,
     # 5 = Start, 6 = Stairs, 7 = Merchant, 8 = Door, 9 = Goal
-    #Map = 27 x 27
+    #Map = 20 x 22
     self.map = [
-      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],#1
-      [0,5,1,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],#2
-      [0,0,0,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,4,1,1,1,0],#3
-      [0,1,1,2,2,3,2,2,1,1,1,1,1,1,4,1,1,1,1,1,1,1,4,1,1,1,0],#4
-      [0,1,1,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,1,1,0],#5
-      [0,1,1,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,1,1,0],#6
-      [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,3,2,2,1,1,0],#7
-      [0,1,4,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,1,1,0],#8
-      [0,1,1,1,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,1,1,0],#9
-      [0,1,1,1,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],#10
-      [0,1,1,1,2,2,3,2,2,1,1,4,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],#11
-      [0,1,1,1,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,4,1,1,1,0],#12
-      [0,1,1,1,2,2,2,2,2,1,1,1,1,7,1,1,1,1,1,1,2,2,2,2,2,1,0],#13
-      [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,1,0],#14
-      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,0,0,0,0],#15   Stair 1
-      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],#16
-      [0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],#17   Stair 2
-      [0,1,1,1,1,7,1,1,1,1,1,1,8,8,1,1,1,1,0,1,1,1,1,1,1,1,0],#18
-      [0,1,4,1,1,1,1,1,1,1,1,1,8,8,1,1,1,1,0,1,1,1,1,1,1,1,0],#19
-      [0,1,1,1,1,1,1,1,1,1,1,1,8,8,1,1,2,2,0,1,1,1,1,1,1,1,0],#20
-      [0,1,1,1,2,2,2,2,2,1,1,1,8,8,1,1,2,2,0,1,1,1,1,1,1,1,0],#21
-      [0,1,1,1,2,2,2,2,2,1,1,1,8,8,1,4,2,2,3,1,1,1,9,1,1,1,0],#22
-      [0,1,1,1,2,2,3,2,2,1,1,1,8,8,1,1,2,2,0,1,1,1,1,1,1,1,0],#23
-      [0,1,1,1,2,2,2,2,2,1,4,1,8,8,1,1,2,2,0,1,1,1,1,1,1,1,0],#24
-      [0,1,1,1,2,2,2,2,2,1,1,1,8,8,1,1,1,1,0,1,1,1,1,1,1,1,0],#25
-      [0,1,1,1,1,1,1,1,1,1,1,1,8,8,1,1,1,1,1,1,1,1,1,1,1,1,0],#26
-      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]#27
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],#0
+      [0,5,1,2,2,2,2,2,1,1,1,1,1,1,4,1,1,1,1,0],#1
+      [0,0,0,2,2,2,2,2,1,1,1,4,1,1,1,1,1,1,1,0],#2
+      [0,1,1,2,2,3,2,2,1,1,1,1,2,2,2,2,2,1,1,0],#3
+      [0,1,1,2,2,2,2,2,1,1,1,1,2,2,2,2,2,1,1,0],#4
+      [0,1,1,2,2,2,2,2,1,1,1,1,2,2,3,2,2,1,1,0],#5
+      [0,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,1,1,0],#6
+      [0,1,4,1,2,2,2,2,2,1,1,1,2,2,2,2,2,1,1,0],#7
+      [0,1,1,1,2,2,2,2,2,1,4,1,1,1,1,1,1,1,1,0],#8
+      [0,1,1,1,2,2,3,2,2,1,1,1,1,1,1,1,4,1,1,0],#9
+      [0,1,1,1,2,2,2,2,2,1,1,1,7,1,2,2,2,2,2,0],#10
+      [0,1,1,1,2,2,2,2,2,1,1,1,0,1,2,2,2,2,2,0],#11
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,0,0,0],#12   Stair 1
+      [0,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],#13   Stair 2
+      [0,4,1,1,7,1,1,1,1,1,8,8,1,1,1,1,0,1,1,0],#14
+      [0,1,1,1,1,1,1,1,1,1,8,8,1,1,2,2,0,1,1,0],#15
+      [0,1,2,2,2,2,2,1,1,1,8,8,1,1,2,2,0,1,1,0],#16
+      [0,1,2,2,2,2,2,1,1,1,8,8,1,4,2,2,3,1,9,0],#17
+      [0,1,2,2,3,2,2,1,1,1,8,8,1,1,2,2,0,1,1,0],#18
+      [0,1,2,2,2,2,2,1,4,1,8,8,1,1,2,2,0,1,1,0],#19
+      [0,1,2,2,2,2,2,1,1,1,8,8,1,1,1,1,0,1,1,0],#20
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]#21
     ]
     self.PosX = 1
     self.PosY = 1
-    print("You are at the position :",self.PosX,";",self.PosY)
 
   def move_map(self):
     import msvcrt
+    print("You are at the position :",self.PosX,";",self.PosY)
     self.action_map(self.PosX,self.PosY)
     choice_direction = msvcrt.getch()
     if choice_direction == b"d": #Right
-      if self.wall_map(self.PosX,self.PosY) == False:
-        self.PosX+=1
-    elif choice_direction == b"q": #Left
-      if self.wall_map(self.PosX,self.PosY) == False:
-        self.PosX-=1
-    elif choice_direction == b"z": #Up
-      if self.wall_map(self.PosX,self.PosY) == False:
+      if self.wall_map(self.PosX,self.PosY+1) == False:
         self.PosY+=1
-    elif choice_direction == b"s": #Down
-      if self.wall_map(self.PosX,self.PosY) == False:
+      else:
+        print("A wall is blocking the road")
+    elif choice_direction == b"q": #Left
+      if self.wall_map(self.PosX,self.PosY-1) == False:
         self.PosY-=1
+      else:
+        print("A wall is blocking the road")
+    elif choice_direction == b"z": #Up
+      if self.wall_map(self.PosX+1,self.PosY) == False:
+        self.PosX+=1
+      else:
+        print("A wall is blocking the road")
+    elif choice_direction == b"s": #Down
+      if self.wall_map(self.PosX-1,self.PosY) == False:
+        self.PosX-=1
+      else:
+        print("A wall is blocking the road")
 
   def action_map(self,X,Y):
     from random import randint
@@ -327,12 +330,13 @@ class Map():
       print("yes ? no ?")
       Answer = str(input())
       if Answer == "yes":
-        if self.PosX == 6:
-          self.PosX = 23
-          self.PosY = 15
+        if self.PosX == 12:
+          self.PosX = 13
+          self.PosY = 4
         else:
-          self.PosX = 6
-          self.PosY = 17
+          self.PosX = 12
+          self.PosY = 16
+        print("You are at the position :",self.PosX,";",self.PosY)
     if self.map[X][Y] == 7:
       print("You encounter a merchant")
       Merchant.buy_item()
@@ -344,7 +348,6 @@ class Map():
 
   def wall_map(self,X,Y):
     if self.map[X][Y] == 0:
-      print("A wall is blocking the road")
       return True
     else:
       return False
@@ -373,8 +376,10 @@ def affichage_inventaire(P):
     Inventaire.append(item.name)
     #print(item.name)
   return(Inventaire)
+
 def ennemy_attack():
   pass
+
 def main():
   import keyboard
   Win = 0
