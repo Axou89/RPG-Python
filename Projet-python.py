@@ -315,7 +315,7 @@ class Map():
       else:
         print("\033[1;34;40m You walk peacefully")
     if self.map[X][Y] == 2:
-      print("You feel something near you")
+      print("\033[1;31;40m You feel something near you")
     if self.map[X][Y] == 3:
       print("\033[1;31;40m You meet a boss")
       #Commencer le combat
@@ -339,7 +339,7 @@ class Map():
         print("You are at the position :",self.PosX,";",self.PosY)
     if self.map[X][Y] == 7:
       print("\033[1;32;40m You encounter a merchant")
-      Merchant.buy_item()
+      Merchant.buy_item(Player,Player)
     if self.map[X][Y] == 8:
       self.door_map()
     if self.map[X][Y] == 9:
@@ -358,7 +358,7 @@ class Map():
         return False
     else:
       print("The door seems locked")
-      self.PosX-=1
+      self.PosY-=1
       return True
 
 #endregion

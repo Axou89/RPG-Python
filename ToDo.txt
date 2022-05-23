@@ -1,6 +1,6 @@
 Un gameplay jouable 
 les combats 
-deplacement entre les cases
+deplacement entre les cases # done
 probabilité de faire spawn un monstre lors du déplacement
 Faire le marchand # done
-couleurs terminal
+couleurs terminal # done
