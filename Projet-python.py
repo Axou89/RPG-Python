@@ -51,7 +51,7 @@ class Entity:
     if self.equipped_weapon != None:
       self.desequip(self.equipped_weapon)
     self.equipped_weapon = self.inventory[id_weapon]
-    self.strength += self.inventory[id_weapon].strength_bonus
+    self.strength += self.inventory[id_weapon].power
 
 
   def EquipArmure(self,id_armure):   ## Pour les armures
@@ -77,19 +77,19 @@ class Entity:
       self.hp -= weapon.hp_bonus
 
 class Merchant(Entity):
-  def __init__(self,items,name,money):
+  def __init__(self,name,money):
     super().__init__(name,150,40,10)
     self.money = money
-    self.inventory = items
+    self.inventory = []
     self.inventory.append(Item("Petite potion de soin","heal",10,2)) 
     self.inventory.append(Item("Moyenne potion de soin","heal",50,8))
     self.inventory.append(Weapon("dague de fer",10,50,10))
     self.inventory.append(Weapon("Arc en fer",30,20,10))
     self.inventory.append(Weapon("Epee en fer",20,5,10))
-    self.inventory.append(Amulette("Amulette de fer",20))
+    self.inventory.append(Amulette("Amulette de fer",20,10))
     self.inventory.append(Armor("Plastron en fer",5,10))
-    
   def buy_item(self,player):
+    print(player)
     for i in range(len(self.inventory)):
       print(i,"-",self.inventory[i].name,":",self.inventory[i].price)
     print("pick an item")
@@ -167,6 +167,7 @@ class Monster(Entity):
 class Player(Entity):  
   def __init__(self,name,type_adventurer):
     self.type_adenturer = type_adventurer
+    self.inventory = []
     if type_adventurer == "warrior":     ## bcp de vie , peu d'attack
       super().__init__(name,100,10,20)
       self.inventory.append(Weapon("Sword",10,5,1))
@@ -179,21 +180,31 @@ class Player(Entity):
       super().__init__(name,40,20,15)
       self.inventory.append(Weapon("Arc",20,20,1))
       self.inventory.append(Item("Potion de soin","heal",50,5))
- 
+  def __str__(self) -> str:
+      return "oui"
   def open_inventory(self):
     for i in range(len(self.inventory)):
       print(i,":",self.inventory[i].name)
     print("Quel objet voulez vous utiliser ?")
     choice = int(input())
+    while len(self.inventory)-1 < choice:
+      print("You have entered an invalid value, try again")
+      choice = int(input())
+      item = self.inventory[choice]
     item = self.inventory[choice]
-    if type(item) == Weapon:
-      self.equip(choice)
 
+      
+    if type(item) == Weapon:
+      print("Vous vous équipez :", self.inventory[choice].name)
+      self.equip(choice)
     elif type(item) == Armor:
+      print("Vous vous équipez :", self.inventory[choice].name)
       self.EquipArmure(choice)
     elif type(item) == Amulette:
+      print("Vous vous équipez :", self.inventory[choice].name)
       self.EquipRelique(choice)
     elif type(item) == Item:
+      print("Vous utilisez :", self.inventory[choice].name)
       item.use(self)
 
 #endregion
@@ -228,20 +239,20 @@ class Weapon(Item):
 class Armor(Item):
   def __init__(self, name, defense_bonus, price):
     super().__init__(name,"Def",defense_bonus, price)
-    self.defense += defense_bonus
+    self.defense_bonus += defense_bonus
     
   def use(self,target):
     super().use(target)
-    target.defense += self.defense
+    target.defense += self.defense_bonus
   
 class Amulette(Item):
-  def __init__(self, name, hp_bonus):
-    super().__init__(name,"hp",hp_bonus)
-    self.hp += hp_bonus
+  def __init__(self, name, hp_bonus,price):
+    super().__init__(name,"hp",hp_bonus,price)
+    self.hp_bonus = hp_bonus
   
   def use(self,target):
     super().use(target)
-    target.defense += self.defense
+    target.hp += self.hp_bonus
 
 #endregion
 
@@ -339,7 +350,8 @@ class Map():
         print("You are at the position :",self.PosX,";",self.PosY)
     if self.map[X][Y] == 7:
       print("\033[1;32;40m You encounter a merchant")
-      Merchant.buy_item(Player,Player)
+      merchant = Merchant("johnny",100)
+      merchant.buy_item()
     if self.map[X][Y] == 8:
       self.door_map()
     if self.map[X][Y] == 9:
@@ -405,11 +417,17 @@ def main():
   print(Inventaire)
   Tuto = "Les touches sont : I pour afficher l'inventaire , E pour les stats et H pour afficher ce menu"
   print(Tuto)
+  print("")
+  print("You can move with z , d , s and q ")
+  print("To quit this game press m")
   while P.hp >= 0 or Win != 1:
     if keyboard.is_pressed("i"):
       P.open_inventory()
     if keyboard.is_pressed("h"):
       print(Tuto)
+    if keyboard.is_pressed("m"):
+      print("Leaving the game")
+      break
  #   if keyboard.read_key() ==":i" or keyboard.read_key() == "I":
  #     print(Inventaire)  # affiche l'inventaire
  #  if keyboard.read_key() =="h" or keyboard.read_key() == "H":
