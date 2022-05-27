@@ -238,8 +238,8 @@ class Weapon(Item):
 
 class Armor(Item):
   def __init__(self, name, defense_bonus, price):
-    super().__init__(name,"Def",defense_bonus, price)
-    self.defense_bonus += defense_bonus
+    super().__init__(name, "Def", defense_bonus, price)
+    self.defense_bonus = defense_bonus
     
   def use(self,target):
     super().use(target)
@@ -290,10 +290,10 @@ class Map():
     self.PosX = 1
     self.PosY = 1
 
-  def move_map(self):
+  def move_map(self,P):
     import msvcrt
     print("You are at the position :",self.PosX,";",self.PosY)
-    self.action_map(self.PosX,self.PosY)
+    self.action_map(self.PosX,self.PosY,P)
     choice_direction = msvcrt.getch()
     if choice_direction == b"d": #Right
       if self.wall_map(self.PosX,self.PosY+1) == False:
@@ -316,7 +316,7 @@ class Map():
       else:
         print("\033[1;35;40m A wall is blocking the road")
 
-  def action_map(self,X,Y):
+  def action_map(self,X,Y,P):
     from random import randint
     if self.map[X][Y] == 1:
       random_number = randint(1,20)
@@ -351,7 +351,7 @@ class Map():
     if self.map[X][Y] == 7:
       print("\033[1;32;40m You encounter a merchant")
       merchant = Merchant("johnny",100)
-      merchant.buy_item()
+      merchant.buy_item(P.name)
     if self.map[X][Y] == 8:
       self.door_map()
     if self.map[X][Y] == 9:
@@ -432,7 +432,7 @@ def main():
  #     print(Inventaire)  # affiche l'inventaire
  #  if keyboard.read_key() =="h" or keyboard.read_key() == "H":
  #     print(Tuto)     # affiche le tuto 
-    map.move_map()
+    map.move_map(P)
 
     
     
