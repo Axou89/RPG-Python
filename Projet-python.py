@@ -90,14 +90,16 @@ class Merchant(Entity):
     self.inventory.append(Armor("Plastron en fer",5,10))
   def buy_item(self,player):
     print(player)
+    print("TEST")
     for i in range(len(self.inventory)):
-      print(i,"-",self.inventory[i].name,":",self.inventory[i].price)
-    print("pick an item")
+      print(i,"-",self.inventory[i].name,", cost :",self.inventory[i].price , "$")
+    print("choose an item to buy")
     choice = int(input())
     Item = self.inventory[choice]
     if player.money >= Item.price:
-      player.money -= Item.price
-      self.money += Item.price
+      player.money = player.money-Item.price
+      self.money = self.money = Item.price
+      print("You buy 1", Item.name)
       player.inventory.append(Item)
       self.inventory.remove(Item)
     else:
@@ -108,6 +110,7 @@ class Merchant(Entity):
     if choix == "y":
      self.buy_item(player)
     else:
+      print("You leave the market and walk peacefully")
       pass
 
 class Monster(Entity):
@@ -351,7 +354,7 @@ class Map():
     if self.map[X][Y] == 7:
       print("\033[1;32;40m You encounter a merchant")
       merchant = Merchant("johnny",100)
-      merchant.buy_item(P.name)
+      merchant.buy_item(P)
     if self.map[X][Y] == 8:
       self.door_map()
     if self.map[X][Y] == 9:
@@ -405,10 +408,11 @@ def main():
     print("Error, no such class")
     exit()
   P = Player(Nom,type_adventurer)
+  P.money = 10
   print("Your name is ",Nom, "and you choose the class ", type_adventurer)
   print("")
   print("")
-  print("you got :" ,P.hp, "hp, a strength of" ,P.strength , "and", P.defense, "point in defense.")
+  print("you got :" ,P.hp, "hp, a strength of" ,P.strength , "and", P.defense, "point in defense. You have :", P.money , "$")
   print("you have :")
   affichage_inventaire(P)
   #for item in P.inventory:      # Affichage de l'inventaire du joueur
@@ -425,6 +429,8 @@ def main():
       P.open_inventory()
     if keyboard.is_pressed("h"):
       print(Tuto)
+    if keyboard.is_pressed("E"):
+      print("you got :" ,P.hp, "hp, a strength of" ,P.strength , "and", P.defense, "point in defense. You got :", P.money ,"$")
     if keyboard.is_pressed("m"):
       print("Leaving the game")
       break
