@@ -342,7 +342,6 @@ class Map():
         boss = "Zouina"
       elif Y == 18:
         boss = "Janin"
-      print("You encounter ", boss)
       Fight(boss, P)
     if self.map[X][Y] == 4:
       print("\033[1;33;40m You find a chest")
@@ -412,6 +411,7 @@ class Attack:
 
 def Fight(monster_name, P):
   monster = Monster(monster_name)
+  print("You encounter ", monster_name)
   while monster.hp > 0 or P.hp > 0:
     continue
   if monster.hp < 0:
