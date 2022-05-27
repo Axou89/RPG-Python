@@ -1,4 +1,5 @@
 #region lecture
+
 def Reading(lecture):
   test = "TXTS/" + lecture + ".txt"
   print(test)
@@ -6,26 +7,10 @@ def Reading(lecture):
   message = f.read()
   print(message)
   f.close()
+
 #end region
+
 Inventaire = []
-
-#region fight
-class Attack:
-  def __init__(self,name,dmg,crit_chance) -> None:
-    self.name = name
-    self.dmg = dmg
-    self.crit_chance = crit_chance
-
-  def calculate_damage(self, entity = None):
-    from random import randint
-    R = randint(0,100)
-    if R < self.crit_chance:
-      if type(entity) == Player and self.type_adventurer == "Assassin":
-        return self.dmg *3
-      return self.dmg *2
-    return self.dmg
-
-#endregion
 
 #region entity
 
@@ -293,6 +278,7 @@ class Map():
     self.PosX = 1
     self.PosY = 1
 
+  #Movement
   def move_map(self,P):
     import msvcrt
     print("You are at the position :",self.PosX,";",self.PosY)
@@ -319,23 +305,49 @@ class Map():
       else:
         print("\033[1;35;40m A wall is blocking the road")
 
+  #Action to execute for each case (map)
   def action_map(self,X,Y,P):
     from random import randint
     if self.map[X][Y] == 1:
       random_number = randint(1,20)
       if random_number == 1:
         print("\033[1;34;40m You encounter a monster")
-        #Commencer combat
+        random_number = randint(1,3)
+        if random_number == 1:
+          monster = "Sbire IOT"
+        elif random_number == 2:
+          monster = "Mec de Pepytes"
+        elif random_number == 3:
+          monster = "B1 informatique"
+        Fight(monster, P)
       else:
         print("\033[1;34;40m You walk peacefully")
     if self.map[X][Y] == 2:
       print("\033[1;31;40m You feel something near you")
     if self.map[X][Y] == 3:
       print("\033[1;31;40m You meet a boss")
-      #Commencer le combat
+      if X == 3:
+        boss = "Guillaume"
+        Reading(boss)
+      elif X == 5:
+        boss = "Sofiane"
+        Reading(boss)
+      elif X == 9:
+        boss = "Antoine"
+        Reading(boss)
+      elif X == 18:
+        boss = "Paul"
+        Reading(boss)
+      elif Y == 16:
+        boss = "Zouina"
+      elif Y == 18:
+        boss = "Janin"
+      print("You encounter ", boss)
+      Fight(boss, P)
     if self.map[X][Y] == 4:
       print("\033[1;33;40m You find a chest")
-      #Donne un item
+      P.money += 5
+      print("You find 5 $")
     if self.map[X][Y] == 5:
       print("\033[1;32;40m Here is the start of your story")
     if self.map[X][Y] == 6:
@@ -361,12 +373,14 @@ class Map():
       print("You finally locate Janin")
       #Start combat
 
+  #Check if the player doesn't go in a wall
   def wall_map(self,X,Y):
     if self.map[X][Y] == 0:
       return True
     else:
       return False
 
+  #Unlock the last boss
   def door_map(self):
     if Monster.count_boss == 4:
         print("You killed the 4 bosses, now you can open the door")
@@ -374,26 +388,56 @@ class Map():
     else:
       print("The door seems locked")
       self.PosY-=1
+      print("You are at the position :",self.PosX,";",self.PosY)
       return True
 
 #endregion
-#region Fight
 
-def Fight():
+#region fight
+
+class Attack:
+  def __init__(self,name,dmg,crit_chance) -> None:
+    self.name = name
+    self.dmg = dmg
+    self.crit_chance = crit_chance
+
+  def calculate_damage(self, entity = None):
+    from random import randint
+    R = randint(0,100)
+    if R < self.crit_chance:
+      if type(entity) == Player and self.type_adventurer == "Assassin":
+        return self.dmg *3
+      return self.dmg *2
+    return self.dmg
+
+def Fight(monster_name, P):
+  monster = Monster(monster_name)
+  while monster.hp > 0 or P.hp > 0:
+    continue
+  if monster.hp < 0:
+    print("You won the fight")
+    if monster_name == "Sbire IOT" or monster_name == "Mec de Pepytes" or monster_name == "B1 informatique":
+      print("You earn 5 $")
+      P.money += 5
+    else:
+      print("You earn 15 $")
+      P.money += 15
+  elif P.hp < 0:
+    print("You are dead")
+
+def ennemy_attack():
   pass
 
 #endregion
 
 #region Gameplay
+
 def affichage_inventaire(P):
   Inventaire = []
   for item in P.inventory:      # Affichage de l'inventaire du joueur
     Inventaire.append(item.name)
     #print(item.name)
   return(Inventaire)
-
-def ennemy_attack():
-  pass
 
 def main():
   import keyboard
