@@ -62,13 +62,13 @@ class Merchant(Entity):
     super().__init__(name,150,40,10)
     self.money = money
     self.inventory = []
-    self.inventory.append(Item("Petite potion de soin","heal",10,2)) 
-    self.inventory.append(Item("Moyenne potion de soin","heal",50,8))
-    self.inventory.append(Weapon("dague de fer",10,50,10))
-    self.inventory.append(Weapon("Arc en fer",30,20,10))
-    self.inventory.append(Weapon("Epee en fer",20,5,10))
-    self.inventory.append(Amulette("Amulette de fer",20,10))
-    self.inventory.append(Armor("Plastron en fer",5,10))
+    self.inventory.append(Item("small healing potion","heal",10,2)) 
+    self.inventory.append(Item("healing potion","heal",50,8))
+    self.inventory.append(Weapon("iron dagger",10,50,10))
+    self.inventory.append(Weapon("iron bow",30,20,10))
+    self.inventory.append(Weapon("iron sword",20,5,10))
+    self.inventory.append(Amulette("iron amulet",20,10))
+    self.inventory.append(Armor("iron chestplate",5,10))
   def buy_item(self,player):
     for i in range(len(self.inventory)):
       print(i,"-",self.inventory[i].name,", cost :",self.inventory[i].price , "$")
@@ -82,8 +82,8 @@ class Merchant(Entity):
       player.inventory.append(Item)
       self.inventory.remove(Item)
     else:
-      print("Vous n'avez pas assez d'argent")
-    print("Voulez vous continuez d'acheter?")
+      print("you don't have enough money")
+    print("do you want to keep buying?")
     print("y or n ? ( yes or no )")
     choix = str(input())
     if choix == "y":
@@ -98,48 +98,48 @@ class Monster(Entity):
     self.count_boss = 0
     if monster_type == "Sbire IOT":
       super().__init__(monster_type,10,2,2)
-      self.inventory.append(Item("Petite Potion Soin","heal",10,2))
-      self.inventory.append(Weapon("Carte graphique",10,10,25))
+      self.inventory.append(Item("small healing potion","heal",10,2))
+      self.inventory.append(Weapon("graphic card",10,10,25))
 
     if monster_type == "Mec de Pepytes":
       super().__init__(monster_type,15,3,5)
-      self.inventory.append(Item("Petite Potion Soin","heal",10,2))
-      self.inventory.append(Weapon("Prospectus Ynov",10,10,10))
+      self.inventory.append(Item("small healing potion","heal",10,2))
+      self.inventory.append(Weapon("Ynov flyer",10,10,10))
 
     if monster_type == "B1 informatique":
       super().__init__(monster_type,5,1,2)
-      self.inventory.append(Item("Petite Potion Soin","heal",10,2))
-      self.inventory.append(Weapon("Prospectus Ynov",10,10,10))
+      self.inventory.append(Item("small healing potion","heal",10,2))
+      self.inventory.append(Weapon("Ynov flye",10,10,10))
 
     # Boss
     elif monster_type == "Sofiane":
       super().__init__(monster_type,100,20,30)
-      self.inventory.append(Item("Potion de soin","heal",50,5))
+      self.inventory.append(Item("healing potion","heal",50,5))
 
 
     elif monster_type == "Guillaume":
       super().__init__(monster_type,40,10,20)
-      self.inventory.append(Weapon("Machoire",15,20,20))
-      self.inventory.append(Item("Potion de soin","heal",50,5))
+      self.inventory.append(Weapon("jaw",15,20,20))
+      self.inventory.append(Item("healing potion","heal",50,5))
 
     elif monster_type == "Antoine":
       super().__init__(monster_type,50,20,15)
        # item ?
-      self.inventory.append(Item("Potion de soin","heal",50,5))
+      self.inventory.append(Item("healing potion","heal",50,5))
 
 
     elif monster_type == "Paul":
       super().__init__(monster_type,60,25,20)
       self.inventory.append((""))
-      self.inventory.append(Item("Potion de soin","heal",50,5))
+      self.inventory.append(Item("healing potion","heal",50,5))
       
     elif monster_type == "Zouina":
       super().__init__(monster_type,140,20,20)
-      self.inventory.append(Item("Potion de soin","heal",50,5))
+      self.inventory.append(Item("healing potion","heal",50,5))
 
     elif monster_type == "Janin":
       super().__init__(monster_type,170,25,30)
-      #self.inventory.append(Item("Feuille d'emargement",""))
+      #self.inventory.append(Item("sign-off sheet",""))
 
 
 '''  def Loot(self):   # Permet de faire un loot aléatoire parmi l'inventaire du monstre
@@ -153,20 +153,20 @@ class Player(Entity):
     if type_adventurer == "warrior":     ## bcp de vie , peu d'attack
       super().__init__(name,100,10,20)
       self.inventory.append(Weapon("Sword",10,5,1))
-      self.inventory.append(Item("Potion de soin","heal",50,5))
+      self.inventory.append(Item("healing potion","heal",50,5))
     elif type_adventurer == "assassin":     # faire 3x les crits | moyen vie bcp d'attaque 
       super().__init__(name,50,20,15)
       self.inventory.append(Weapon("Dagger",5,30,1))    
-      self.inventory.append(Item("Potion de soin","heal",50,5))
+      self.inventory.append(Item("healing potion","heal",50,5))
     elif type_adventurer == "archer":       #  son arme a bcp d'attaque
       super().__init__(name,40,20,15)
       self.inventory.append(Weapon("Arc",20,20,1))
-      self.inventory.append(Item("Potion de soin","heal",50,5))
+      self.inventory.append(Item("healing potion","heal",50,5))
 
   def open_inventory(self):
     for i in range(len(self.inventory)):
       print(i,":",self.inventory[i].name)
-    print("Quel objet voulez vous utiliser ?")
+    print("Which object do you want to use ?")
     print("Press 99 to exit")
     choice = int(input())
     if choice == "99":
@@ -180,16 +180,16 @@ class Player(Entity):
 
       
     if type(item) == Weapon:
-      print("Vous vous équipez :", self.inventory[choice].name)
+      print("you equip yourself with :", self.inventory[choice].name)
       self.equip(choice)
     elif type(item) == Armor:
-      print("Vous vous équipez :", self.inventory[choice].name)
+      print("you equip yourself with :", self.inventory[choice].name)
       self.EquipArmure(choice)
     elif type(item) == Amulette:
-      print("Vous vous équipez :", self.inventory[choice].name)
+      print("you equip yourself with :", self.inventory[choice].name)
       self.EquipRelique(choice)
     elif type(item) == Item:
-      print("Vous utilisez :", self.inventory[choice].name)
+      print("you use :", self.inventory[choice].name)
       item.use(self)
 
 #endregion
@@ -500,7 +500,7 @@ def main():
     #print(item.name)
 
   print(Inventaire)
-  Tuto = "Les touches sont : I pour afficher l'inventaire , E pour les stats et H pour afficher ce menu"
+  Tuto = "The keys are : I for see inventory , E for the stats et H to reveal this menu"
   print(Tuto)
   print("")
   print("You can move with z , d , s and q ")
