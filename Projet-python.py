@@ -4,7 +4,6 @@ import sys
 
 def Reading(lecture):
   test = "TXTS/" + lecture + ".txt"
-  print(test)
   f = open(test,'r')
   message = f.read()
   print(message)
@@ -123,7 +122,7 @@ class Monster(Entity):
 
     # Boss
     elif monster_type == "Sofiane":
-      super().__init__(monster_type,100,20,30)
+      super().__init__(monster_type,100,15,10)
       self.inventory.append(Item("healing potion","heal",50,5))
 
 
@@ -161,15 +160,15 @@ class Player(Entity):
     self.type_adenturer = type_adventurer
     self.inventory = []
     if type_adventurer == "warrior":     ## bcp de vie , peu d'attack
-      super().__init__(name,100,10,10)
-      self.inventory.append(Weapon("Sword",10,5,1))
+      super().__init__(name,105,20,15)
+      self.inventory.append(Weapon("Sword",15,5,1))
       self.inventory.append(Item("healing potion","heal",50,5))
     elif type_adventurer == "assassin":     # faire 3x les crits | moyen vie bcp d'attaque 
-      super().__init__(name,50,20,5)
-      self.inventory.append(Weapon("Dagger",5,30,1))    
+      super().__init__(name,70,35,8)
+      self.inventory.append(Weapon("Dagger",5,40,1))    
       self.inventory.append(Item("healing potion","heal",50,5))
     elif type_adventurer == "archer":       #  son arme a bcp d'attaque
-      super().__init__(name,40,20,5)
+      super().__init__(name,80,25,10)
       self.inventory.append(Weapon("Arc",20,20,1))
       self.inventory.append(Item("healing potion","heal",50,5))
 
@@ -461,11 +460,11 @@ def Fight(monster_name, P):
     print("You have ", P.hp,"hp",P.strength,"strength and",P.defense,"defense,what do you want to do ?")
     print("You can :")
     print("0 - attack")
-    print("1 - Run away and loose 15hp")
+    print("1 - Run away and loose 10hp")
+    print("2 - Open inventory")
     choose = input()
     if choose == "0":
       player_attack(monster,P)
-      print("you did ",)
       if monster.hp <= 0:
         print("You won the fight")
         if monster_name == "Sbire IOT" or monster_name == "Mec de Pepytes" or monster_name == "B1 informatique":
@@ -481,9 +480,11 @@ def Fight(monster_name, P):
         print("You are dead")
         return None
     elif choose == "1":
-      P.hp = P.hp-15
-      print("You run away and loose 15hp, you now have",P.hp,"hp")
+      P.hp = P.hp-10
+      print("You run away and loose 10hp, you now have",P.hp,"hp")
       break
+    elif choose == "2":
+      P.open_inventory()
     else:
       print("incorrect choose, try again")
       Fight(monster.name,P)
