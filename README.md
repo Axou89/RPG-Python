@@ -37,10 +37,10 @@ Map = 20 x 22:
       [0,1,2,2,2,2,2,1,4,1,8,8,1,1,2,2,0,1,1,0],#19
       [0,1,2,2,2,2,2,1,1,1,8,8,1,1,1,1,0,1,1,0],#20
       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]#21
-    ]
+ 
 ## Authors
 
 - [@AFARAJALLAH](https://github.com/aless124)
 - [@Axou89](https://github.com/Axou89)
-- [@Sambre ???]
+- [@Sambre](https://github.com/SambreV95)
 
