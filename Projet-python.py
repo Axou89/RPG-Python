@@ -30,32 +30,42 @@ class Entity:
 
   def equip(self, id_weapon):   ## Pour les armes
     if self.equipped_weapon != None:
-      self.desequip(self.equipped_weapon)
-    self.equipped_weapon = self.inventory[id_weapon]
-    self.strength += self.inventory[id_weapon].power
-
+      print("You unnequip",self.equipped_weapon.name)
+      self.desequip(self.equipped_weapon,self.inventory[id_weapon].power)
+      self.equipped_weapon = None
+    else:
+      print("you equip yourself with :", self.inventory[id_weapon].name)
+      self.strength += self.inventory[id_weapon].power
+      self.equipped_weapon = self.inventory[id_weapon]
+    
 
   def EquipArmure(self,id_armure):   ## Pour les armures
     if self.equipped_armure != None:
-      self.desequip(self.equipped_armure)
-    self.equipped_armure = self.inventory[id_armure]
-    self.defense += self.inventory[id_armure].defense_bonus
+      print("You unnequip",self.equipped_armure.name)
+      self.desequip(self.equipped_armure,self.inventory[id_armure].defense_bonus)
+      self.equipped_armure = None
+    else:
+      print("You equip yourself with :",self.inventory[id_armure].name)
+      self.equipped_armure = self.inventory[id_armure]
+      self.defense += self.inventory[id_armure].defense_bonus
   
 
   def EquipRelique(self,weapon):  ## Pour les amulettes
     if self.equipped_relique != None:
+      print("You desequip",self.equipped_relique.name)
       self.desequip(self.equipped_relique)
+      self.equipped_relique = None
     self.equipped_relique = self.inventory[weapon]
     self.hp += self.inventory[weapon].hp_bonus
 
 
-  def desequip(self, weapon):
+  def desequip(self, weapon,bonus):
     if type(weapon) == Weapon:
-      self.strength -= weapon.strength_bonus
+      self.strength = self.strength-bonus
     elif type(weapon) == Armor:
-      self.defense -= weapon.defense_bonus
-    elif type(weapon) == Amulette:
-      self.hp -= weapon.hp_bonus
+      self.defense = self.defense-bonus
+    elif type(weapon) == Amulette:  
+      self.hp = self.strength-self.inventory[weapon].hp_bonus
 
 class Merchant(Entity):
   def __init__(self,name,money):
@@ -95,7 +105,6 @@ class Merchant(Entity):
 class Monster(Entity):
   def __init__(self,monster_type):
     # Monstre basique
-    self.count_boss = 0
     if monster_type == "Sbire IOT":
       super().__init__(monster_type,10,2,2)
       self.inventory.append(Item("small healing potion","heal",10,2))
@@ -180,7 +189,6 @@ class Player(Entity):
 
       
     if type(item) == Weapon:
-      print("you equip yourself with :", self.inventory[choice].name)
       self.equip(choice)
     elif type(item) == Armor:
       print("you equip yourself with :", self.inventory[choice].name)
@@ -216,7 +224,6 @@ class Weapon(Item):
   def __init__(self, name, strength_bonus, critical_chance, price):
     super().__init__(name,"Str",strength_bonus, price)
     self.critical_chance = critical_chance
-  
   def use(self,target):
     super().use(target)
     target.critical_chance += self.critical_chance
@@ -276,10 +283,10 @@ class Map():
     self.PosY = 1
 
   #Movement
-  def move_map(self,P):
+  def move_map(self,P,count_boss):
     import msvcrt
     print("You are at the position :",self.PosX,";",self.PosY)
-    self.action_map(self.PosX,self.PosY,P)
+    self.action_map(self.PosX,self.PosY,P,count_boss)
     choice_direction = msvcrt.getch()
     if choice_direction == b"d": #Right
       if self.wall_map(self.PosX,self.PosY+1) == False:
@@ -303,7 +310,7 @@ class Map():
         print("\033[1;35;40m A wall is blocking the road")
 
   #Action to execute for each case (map)
-  def action_map(self,X,Y,P):
+  def action_map(self,X,Y,P,count_boss):
     if P.hp <= 0:
       print("You have,",P.hp,"hp,you lose the game")
       return None   ## Censé quitter le jeu , marche pas   
@@ -342,11 +349,39 @@ class Map():
         boss = "Zouina"
       elif Y == 18:
         boss = "Janin"
-      Fight(boss, P)
+      killed = Fight(boss, P)
+      if killed == True:
+        count_boss += 1
+        self.map[X][Y] = 1
+        self.map[X-2][Y-2] = 1
+        self.map[X-2][Y-1] = 1
+        self.map[X-2][Y] = 1
+        self.map[X-2][Y+1] = 1
+        self.map[X-2][Y+2] = 1
+        self.map[X-1][Y-2] = 1
+        self.map[X-1][Y-1] = 1
+        self.map[X-1][Y] = 1
+        self.map[X-1][Y+1] = 1
+        self.map[X-1][Y+2] = 1
+        self.map[X][Y-2] = 1
+        self.map[X][Y-1] = 1
+        self.map[X][Y+1] = 1
+        self.map[X][Y+2] = 1
+        self.map[X+1][Y-2] = 1
+        self.map[X+1][Y-1] = 1
+        self.map[X+1][Y] = 1
+        self.map[X+1][Y+1] = 1
+        self.map[X+1][Y+2] = 1
+        self.map[X+2][Y-2] = 1
+        self.map[X+2][Y-1] = 1
+        self.map[X+2][Y] = 1
+        self.map[X+2][Y+1] = 1
+        self.map[X+2][Y+2] = 1
     if self.map[X][Y] == 4:
       print("\033[1;33;40m You find a chest")
       P.money += 5
       print("You find 5 $")
+      self.map[X][Y] == 1
     if self.map[X][Y] == 5:
       print("\033[1;32;40m Here is the start of your story")
     if self.map[X][Y] == 6:
@@ -367,10 +402,10 @@ class Map():
       merchant = Merchant("johnny",100)
       merchant.buy_item(P)
     if self.map[X][Y] == 8:
-      self.door_map()
+      self.door_map(count_boss)
     if self.map[X][Y] == 9:
       print("You finally locate Janin")
-      #Start combat
+      Fight("Janin", P)
 
   #Check if the player doesn't go in a wall
   def wall_map(self,X,Y):
@@ -380,8 +415,8 @@ class Map():
       return False
 
   #Unlock the last boss
-  def door_map(self):
-    if Monster.count_boss == 4:
+  def door_map(self, count_boss):
+    if count_boss >= 4:
         print("You killed the 4 bosses, now you can open the door")
         return False
     else:
@@ -411,6 +446,7 @@ class Attack:
       print("critical hit ! you did",entity.strength*2,"dmg")
       return entity.strength *2
     print("No critical hit")
+    print("You did",entity.strength,"damage")
     return entity.strength
 
 def Fight(monster_name, P):
@@ -435,7 +471,7 @@ def Fight(monster_name, P):
         else:
           print("You earn 15 $")
           P.money += 15
-          return None
+          return True
       ennemy_attack(monster,P)
       if P.hp < 0:
         print("You are dead")
@@ -451,7 +487,7 @@ def Fight(monster_name, P):
 def player_attack(monster,P):
   if P.strength > monster.defense:
     dmg = Attack.calculate_damage(Attack,P.strength,P)           # calculate_damage(P)
-    monster.hp = monster.hp - dmg
+    monster.hp = monster.hp - (dmg-monster.defense)
     if monster.hp > 0:
       print("The monster have still,",monster.hp,"hp")
   else:
@@ -478,6 +514,7 @@ def affichage_inventaire(P):
 def main():
   import keyboard
   Win = 0
+  count_boss = 0
   map = Map()
 
   print("What is your name ? ")
@@ -519,7 +556,7 @@ def main():
  #     print(Inventaire)  # affiche l'inventaire
  #  if keyboard.read_key() =="h" or keyboard.read_key() == "H":
  #     print(Tuto)     # affiche le tuto 
-    map.move_map(P)
+    map.move_map(P,count_boss)
 
     
     
