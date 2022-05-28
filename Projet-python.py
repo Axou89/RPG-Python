@@ -179,7 +179,7 @@ class Player(Entity):
       print(i,":",self.inventory[i].name)
     print("Which object do you want to use ?")
     print("Press 99 to exit")
-    choice = int(input())
+    choice = input()
     if choice == 99:
       print("Leaving inventory")
       return
@@ -390,7 +390,7 @@ class Map():
       print("\033[1;33;40m You find a chest")
       P.money += 5
       print("You find 5 $")
-      self.map[X][Y] == 1
+      self.map[X][Y] = 1
     if self.map[X][Y] == 5:
       print("\033[1;32;40m Here is the start of your story")
     if self.map[X][Y] == 6:
