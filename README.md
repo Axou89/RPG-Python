@@ -7,9 +7,9 @@ Just a normal game made with python
 ## Map
 
 The map looks like this :
-0 = Wall, 1 = Random Fight, 2 = Danger Boss, 3 = Boss,
-4 = Chest,5 = Start, 6 = Stairs, 7 = Merchant,
-8 = Door, 9 = Goal
+    0 = Wall, 1 = Random Fight, 2 = Danger Boss, 3 = Boss,
+    4 = Chest,5 = Start, 6 = Stairs, 7 = Merchant,
+    8 = Door, 9 = Goal
 
 
 Map = 20 x 22:
