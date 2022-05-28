@@ -1,5 +1,6 @@
 #region lecture
 
+import sys
 
 def Reading(lecture):
   test = "TXTS/" + lecture + ".txt"
@@ -127,7 +128,7 @@ class Monster(Entity):
 
 
     elif monster_type == "Guillaume":
-      super().__init__(monster_type,40,10,20)
+      super().__init__(monster_type,40,15,20)
       self.inventory.append(Weapon("jaw",15,20,20))
       self.inventory.append(Item("healing potion","heal",50,5))
 
@@ -160,15 +161,15 @@ class Player(Entity):
     self.type_adenturer = type_adventurer
     self.inventory = []
     if type_adventurer == "warrior":     ## bcp de vie , peu d'attack
-      super().__init__(name,100,10,20)
+      super().__init__(name,100,10,10)
       self.inventory.append(Weapon("Sword",10,5,1))
       self.inventory.append(Item("healing potion","heal",50,5))
     elif type_adventurer == "assassin":     # faire 3x les crits | moyen vie bcp d'attaque 
-      super().__init__(name,50,20,15)
+      super().__init__(name,50,20,5)
       self.inventory.append(Weapon("Dagger",5,30,1))    
       self.inventory.append(Item("healing potion","heal",50,5))
     elif type_adventurer == "archer":       #  son arme a bcp d'attaque
-      super().__init__(name,40,20,15)
+      super().__init__(name,40,20,5)
       self.inventory.append(Weapon("Arc",20,20,1))
       self.inventory.append(Item("healing potion","heal",50,5))
 
@@ -308,12 +309,15 @@ class Map():
         self.PosX-=1
       else:
         print("\033[1;35;40m A wall is blocking the road")
+    if self.action_map == True:
+      return True
 
   #Action to execute for each case (map)
   def action_map(self,X,Y,P,count_boss):
     if P.hp <= 0:
       print("You have,",P.hp,"hp,you lose the game")
-      return None   ## Censé quitter le jeu , marche pas   
+      sys.exit()
+      return True   ## Censé quitter le jeu , marche pas   
     from random import randint
     if self.map[X][Y] == 1:
       random_number = randint(1,20)
@@ -441,12 +445,11 @@ class Attack:
     R = randint(0,100)
     if R < entity.critical_chance:
       if type(entity) == Player and self.type_adventurer == "Assassin":
-        print("critical hit ! you did",entity.strength*3,"dmg")
+        print("critical hit ! 3x damage because you are an assassin")
         return entity.strength *3
-      print("critical hit ! you did",entity.strength*2,"dmg")
+      print("critical hit ! 2x damage ")
       return entity.strength *2
     print("No critical hit")
-    print("You did",entity.strength,"damage")
     return entity.strength
 
 def Fight(monster_name, P):
@@ -462,6 +465,7 @@ def Fight(monster_name, P):
     choose = input()
     if choose == "0":
       player_attack(monster,P)
+      print("you did ",)
       if monster.hp <= 0:
         print("You won the fight")
         if monster_name == "Sbire IOT" or monster_name == "Mec de Pepytes" or monster_name == "B1 informatique":
@@ -487,8 +491,10 @@ def Fight(monster_name, P):
 def player_attack(monster,P):
   if P.strength > monster.defense:
     dmg = Attack.calculate_damage(Attack,P.strength,P)           # calculate_damage(P)
+    print("you did",dmg-monster.defense,"dmg")
     monster.hp = monster.hp - (dmg-monster.defense)
     if monster.hp > 0:
+
       print("The monster have still,",monster.hp,"hp")
   else:
     print("Not enougth strength , you didn't even touch him")
@@ -514,6 +520,7 @@ def affichage_inventaire(P):
 def main():
   import keyboard
   Win = 0
+  end = False
   count_boss = 0
   map = Map()
 
@@ -557,7 +564,6 @@ def main():
  #  if keyboard.read_key() =="h" or keyboard.read_key() == "H":
  #     print(Tuto)     # affiche le tuto 
     map.move_map(P,count_boss)
-
     
     
 
