@@ -1,5 +1,6 @@
 #region lecture
 
+
 def Reading(lecture):
   test = "TXTS/" + lecture + ".txt"
   print(test)
@@ -26,11 +27,6 @@ class Entity:
     self.equipped_relique = None
     self.critical_chance = 1
     self.money = 0
-
-  def take_damage(self,amount):   # Calcul des dégat, l'attaque doit être supérieur à la défense
-    if amount > self.defense:
-      amount -= self.defense
-      self.hp -= amount 
 
   def equip(self, id_weapon):   ## Pour les armes
     if self.equipped_weapon != None:
@@ -74,8 +70,6 @@ class Merchant(Entity):
     self.inventory.append(Amulette("Amulette de fer",20,10))
     self.inventory.append(Armor("Plastron en fer",5,10))
   def buy_item(self,player):
-    print(player)
-    print("TEST")
     for i in range(len(self.inventory)):
       print(i,"-",self.inventory[i].name,", cost :",self.inventory[i].price , "$")
     print("choose an item to buy")
@@ -168,13 +162,16 @@ class Player(Entity):
       super().__init__(name,40,20,15)
       self.inventory.append(Weapon("Arc",20,20,1))
       self.inventory.append(Item("Potion de soin","heal",50,5))
-  def __str__(self) -> str:
-      return "oui"
+
   def open_inventory(self):
     for i in range(len(self.inventory)):
       print(i,":",self.inventory[i].name)
     print("Quel objet voulez vous utiliser ?")
+    print("Press 99 to exit")
     choice = int(input())
+    if choice == "99":
+      print("Leaving inventory")
+      return None
     while len(self.inventory)-1 < choice:
       print("You have entered an invalid value, try again")
       choice = int(input())
@@ -307,6 +304,9 @@ class Map():
 
   #Action to execute for each case (map)
   def action_map(self,X,Y,P):
+    if P.hp <= 0:
+      print("You have,",P.hp,"hp,you lose the game")
+      return None   ## Censé quitter le jeu , marche pas   
     from random import randint
     if self.map[X][Y] == 1:
       random_number = randint(1,20)
@@ -400,33 +400,69 @@ class Attack:
     self.dmg = dmg
     self.crit_chance = crit_chance
 
-  def calculate_damage(self, entity = None):
+  def calculate_damage(self, Atq,entity):
+    Atq = Attack("Playerattack",entity.strength,entity.critical_chance)
     from random import randint
     R = randint(0,100)
-    if R < self.crit_chance:
+    if R < entity.critical_chance:
       if type(entity) == Player and self.type_adventurer == "Assassin":
-        return self.dmg *3
-      return self.dmg *2
-    return self.dmg
+        print("critical hit ! you did",entity.strength*3,"dmg")
+        return entity.strength *3
+      print("critical hit ! you did",entity.strength*2,"dmg")
+      return entity.strength *2
+    print("No critical hit")
+    return entity.strength
 
 def Fight(monster_name, P):
   monster = Monster(monster_name)
   print("You encounter ", monster_name)
   while monster.hp > 0 or P.hp > 0:
-    continue
-  if monster.hp < 0:
-    print("You won the fight")
-    if monster_name == "Sbire IOT" or monster_name == "Mec de Pepytes" or monster_name == "B1 informatique":
-      print("You earn 5 $")
-      P.money += 5
+    print("")
+    print( monster.name," have ", monster.hp,"hp",monster.strength,"strength and",monster.defense,"defense")
+    print("You have ", P.hp,"hp",P.strength,"strength and",P.defense,"defense,what do you want to do ?")
+    print("You can :")
+    print("0 - attack")
+    print("1 - Run away and loose 15hp")
+    choose = input()
+    if choose == "0":
+      player_attack(monster,P)
+      if monster.hp <= 0:
+        print("You won the fight")
+        if monster_name == "Sbire IOT" or monster_name == "Mec de Pepytes" or monster_name == "B1 informatique":
+          print("You earn 5 $")
+          P.money += 5
+          return None
+        else:
+          print("You earn 15 $")
+          P.money += 15
+          return None
+      ennemy_attack(monster,P)
+      if P.hp < 0:
+        print("You are dead")
+        return None
+    elif choose == "1":
+      P.hp = P.hp-15
+      print("You run away and loose 15hp, you now have",P.hp,"hp")
+      break
     else:
-      print("You earn 15 $")
-      P.money += 15
-  elif P.hp < 0:
-    print("You are dead")
+      print("incorrect choose, try again")
+      Fight(monster.name,P)
 
-def ennemy_attack():
-  pass
+def player_attack(monster,P):
+  if P.strength > monster.defense:
+    dmg = Attack.calculate_damage(Attack,P.strength,P)           # calculate_damage(P)
+    monster.hp = monster.hp - dmg
+    if monster.hp > 0:
+      print("The monster have still,",monster.hp,"hp")
+  else:
+    print("Not enougth strength , you didn't even touch him")
+
+def ennemy_attack(monster,Player):
+  if monster.strength > Player.defense:
+    Player.hp = Player.hp - monster.strength
+    print("The monster did",monster.strength,"dmg")
+  else:
+    print("The monster touch you but you didn't feel anything")
 
 #endregion
 
@@ -462,6 +498,7 @@ def main():
   #for item in P.inventory:      # Affichage de l'inventaire du joueur
   #  Inventaire.append(item.name)
     #print(item.name)
+
   print(Inventaire)
   Tuto = "Les touches sont : I pour afficher l'inventaire , E pour les stats et H pour afficher ce menu"
   print(Tuto)
@@ -474,7 +511,7 @@ def main():
     if keyboard.is_pressed("h"):
       print(Tuto)
     if keyboard.is_pressed("E"):
-      print("you got :" ,P.hp, "hp, a strength of" ,P.strength , "and", P.defense, "point in defense. You got :", P.money ,"$")
+      print("you got :" ,P.hp, "hp, a strength of" ,P.strength,",", P.defense, "point in defense and", P.money ,"$")
     if keyboard.is_pressed("m"):
       print("Leaving the game")
       break
