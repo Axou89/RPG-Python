@@ -106,17 +106,17 @@ class Monster(Entity):
   def __init__(self,monster_type):
     # Monstre basique
     if monster_type == "Sbire IOT":
-      super().__init__(monster_type,10,2,2)
+      super().__init__(monster_type,20,12,10)
       self.inventory.append(Item("small healing potion","heal",10,2))
       self.inventory.append(Weapon("graphic card",10,10,25))
 
     if monster_type == "Mec de Pepytes":
-      super().__init__(monster_type,15,3,5)
+      super().__init__(monster_type,25,13,15)
       self.inventory.append(Item("small healing potion","heal",10,2))
       self.inventory.append(Weapon("Ynov flyer",10,10,10))
 
     if monster_type == "B1 informatique":
-      super().__init__(monster_type,5,1,2)
+      super().__init__(monster_type,15,11,12)
       self.inventory.append(Item("small healing potion","heal",10,2))
       self.inventory.append(Weapon("Ynov flye",10,10,10))
 
@@ -127,18 +127,18 @@ class Monster(Entity):
 
 
     elif monster_type == "Guillaume":
-      super().__init__(monster_type,40,15,20)
+      super().__init__(monster_type,50,15,20)
       self.inventory.append(Weapon("jaw",15,20,20))
       self.inventory.append(Item("healing potion","heal",50,5))
 
     elif monster_type == "Antoine":
-      super().__init__(monster_type,50,20,15)
+      super().__init__(monster_type,60,20,15)
        # item ?
       self.inventory.append(Item("healing potion","heal",50,5))
 
 
     elif monster_type == "Paul":
-      super().__init__(monster_type,60,25,20)
+      super().__init__(monster_type,65,30,20)
       self.inventory.append((""))
       self.inventory.append(Item("healing potion","heal",50,5))
       
@@ -159,16 +159,18 @@ class Player(Entity):
   def __init__(self,name,type_adventurer):
     self.type_adenturer = type_adventurer
     self.inventory = []
+    self.level = 1
+    self.xp = 0
     if type_adventurer == "warrior":     ## bcp de vie , peu d'attack
-      super().__init__(name,105,20,15)
+      super().__init__(name,80,15,10)
       self.inventory.append(Weapon("Sword",15,5,1))
       self.inventory.append(Item("healing potion","heal",50,5))
     elif type_adventurer == "assassin":     # faire 3x les crits | moyen vie bcp d'attaque 
-      super().__init__(name,70,35,8)
+      super().__init__(name,60,35,5)
       self.inventory.append(Weapon("Dagger",5,40,1))    
       self.inventory.append(Item("healing potion","heal",50,5))
     elif type_adventurer == "archer":       #  son arme a bcp d'attaque
-      super().__init__(name,80,25,10)
+      super().__init__(name,65,20,7)
       self.inventory.append(Weapon("Arc",20,20,1))
       self.inventory.append(Item("healing potion","heal",50,5))
 
@@ -178,16 +180,13 @@ class Player(Entity):
     print("Which object do you want to use ?")
     print("Press 99 to exit")
     choice = int(input())
-    if choice == "99":
+    if choice == 99:
       print("Leaving inventory")
-      return None
+      return
     while len(self.inventory)-1 < choice:
       print("You have entered an invalid value, try again")
-      choice = int(input())
-      item = self.inventory[choice]
+      self.open_inventory()
     item = self.inventory[choice]
-
-      
     if type(item) == Weapon:
       self.equip(choice)
     elif type(item) == Armor:
@@ -288,22 +287,22 @@ class Map():
     print("You are at the position :",self.PosX,";",self.PosY)
     self.action_map(self.PosX,self.PosY,P,count_boss)
     choice_direction = msvcrt.getch()
-    if choice_direction == b"d": #Right
+    if choice_direction == b"d" or choice_direction == b"D": #Right
       if self.wall_map(self.PosX,self.PosY+1) == False:
         self.PosY+=1
       else:
         print("A wall is blocking the road")
-    elif choice_direction == b"q": #Left
+    elif choice_direction == b"q" or choice_direction == b"Q": #Left
       if self.wall_map(self.PosX,self.PosY-1) == False:
         self.PosY-=1
       else:
         print("A wall is blocking the road")
-    elif choice_direction == b"z": #Up
+    elif choice_direction == b"z" or choice_direction == b"Z": #Up
       if self.wall_map(self.PosX+1,self.PosY) == False:
         self.PosX+=1
       else:
         print("A wall is blocking the road")
-    elif choice_direction == b"s": #Down
+    elif choice_direction == b"s" or choice_direction == b"S": #Down
       if self.wall_map(self.PosX-1,self.PosY) == False:
         self.PosX-=1
       else:
@@ -329,6 +328,7 @@ class Map():
           monster = "Mec de Pepytes"
         elif random_number == 3:
           monster = "B1 informatique"
+        print("He is level 1")
         Fight(monster, P)
       else:
         print("\033[1;34;40m You walk peacefully")
@@ -339,19 +339,25 @@ class Map():
       if X == 3:
         boss = "Guillaume"
         Reading(boss)
+        print("He is level 3")
       elif X == 5:
         boss = "Sofiane"
         Reading(boss)
+        print("He is level 5")
       elif X == 9:
         boss = "Antoine"
         Reading(boss)
+        print("He is level 5")
       elif X == 18:
         boss = "Paul"
         Reading(boss)
+        print("He is level 5")
       elif Y == 16:
         boss = "Zouina"
+        print("He is level 7")
       elif Y == 18:
         boss = "Janin"
+        print("He is level 10")
       killed = Fight(boss, P)
       if killed == True:
         count_boss += 1
@@ -470,10 +476,26 @@ def Fight(monster_name, P):
         if monster_name == "Sbire IOT" or monster_name == "Mec de Pepytes" or monster_name == "B1 informatique":
           print("You earn 5 $")
           P.money += 5
+          P.xp += 20
+          print("You earn 20 xp")
+          if P.xp >= P.level*40:
+            P.xp = 0
+            P.level += 1
+            P.strength += 5
+            P.defense += 5
+            P.hp += 5
+            print("You won a level, you are level : ",P.level)
+            print("You earn 5 points in strength, hp and defense")
           return None
         else:
           print("You earn 15 $")
           P.money += 15
+          P.level += 1
+          P.strength += 5
+          P.defense += 5
+          P.hp += 5
+          print("You won a level, you are level : ",P.level)
+          print("You earn 5 points in strength, hp and defense")
           return True
       ennemy_attack(monster,P)
       if P.hp < 0:
