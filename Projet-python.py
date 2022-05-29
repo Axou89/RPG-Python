@@ -170,7 +170,7 @@ class Player(Entity):
     self.inventory = []
     self.level = 1
     self.xp = 0
-    self.boss_count = 4
+    self.boss_count = 0
     if type_adventurer == "warrior":     ## bcp de vie , peu d'attack
       super().__init__(name,80,15,10)
       self.inventory.append(Weapon("Sword",15,5,1))
@@ -290,10 +290,10 @@ class Map():
       [0,4,1,1,7,1,1,1,1,1,8,8,1,1,1,1,0,1,1,0],#14
       [0,1,1,1,1,1,1,1,1,1,8,8,1,1,2,2,0,1,1,0],#15
       [0,1,2,2,2,2,2,1,1,1,8,8,1,1,2,2,0,1,1,0],#16
-      [0,1,2,2,2,2,2,1,1,1,8,8,1,4,2,2,3,1,9,0],#17
+      [0,1,2,2,2,2,2,1,1,1,8,8,1,4,2,2,3,1,1,0],#17
       [0,1,2,2,3,2,2,1,1,1,8,8,1,1,2,2,0,1,1,0],#18
       [0,1,2,2,2,2,2,1,4,1,8,8,1,1,2,2,0,1,1,0],#19
-      [0,1,2,2,2,2,2,1,1,1,8,8,1,1,1,1,0,1,1,0],#20
+      [0,1,2,2,2,2,2,1,1,1,8,8,1,1,1,1,0,1,9,0],#20
       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]#21
     ]
     self.PosX = 1
@@ -431,7 +431,13 @@ class Map():
     if self.map[X][Y] == 9:
       print("You finally locate Janin")
       print("He is level 10")
-      Fight("Janin", P)
+      killed = Fight("Janin", P)
+      if killed == True:
+        self.map[X][Y] = 1
+        print("\033[1;37;40m You beated all the bosses")
+        print("Janin: It wasn't me")
+        print("Janin: It was my twin brother")
+        print("Your quest has ended, you can now walk freely and kill some monsters")
 
   #Check if the player doesn't go in a wall
   def wall_map(self,X,Y):
@@ -471,7 +477,7 @@ class Attack:
         return entity.strength *3
       print("critical hit ! 2x damage ")
       return entity.strength *2
-    print("No critical hit")
+    print("\033[1;37;40m No critical hit")
     return entity.strength
 
 def Fight(monster_name, P):
