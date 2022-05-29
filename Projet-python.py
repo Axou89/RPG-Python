@@ -6,7 +6,7 @@ def Reading(lecture):
   test = "TXTS/" + lecture + ".txt"
   f = open(test,'r')
   message = f.read()
-  print(message)
+  print("\033[1;37;40m", message)
   f.close()
 
 #end region
@@ -30,29 +30,29 @@ class Entity:
 
   def equip(self, id_weapon):   ## Pour les armes
     if self.equipped_weapon != None:
-      print("You unnequip",self.equipped_weapon.name)
+      print("\033[1;37;40m You unnequip",self.equipped_weapon.name)
       self.desequip(self.equipped_weapon,self.inventory[id_weapon].power)
       self.equipped_weapon = None
     else:
-      print("you equip yourself with :", self.inventory[id_weapon].name)
+      print("\033[1;37;40m You equip yourself with :", self.inventory[id_weapon].name)
       self.strength += self.inventory[id_weapon].power
       self.equipped_weapon = self.inventory[id_weapon]
     
 
   def EquipArmure(self,id_armure):   ## Pour les armures
     if self.equipped_armure != None:
-      print("You unnequip",self.equipped_armure.name)
+      print("\033[1;37;40m You unnequip",self.equipped_armure.name)
       self.desequip(self.equipped_armure,self.inventory[id_armure].defense_bonus)
       self.equipped_armure = None
     else:
-      print("You equip yourself with :",self.inventory[id_armure].name)
+      print("\033[1;37;40m You equip yourself with :",self.inventory[id_armure].name)
       self.equipped_armure = self.inventory[id_armure]
       self.defense += self.inventory[id_armure].defense_bonus
   
 
   def EquipRelique(self,weapon):  ## Pour les amulettes
     if self.equipped_relique != None:
-      print("You desequip",self.equipped_relique.name)
+      print("\033[1;37;40m You desequip",self.equipped_relique.name)
       self.desequip(self.equipped_relique)
       self.equipped_relique = None
     self.equipped_relique = self.inventory[weapon]
@@ -82,7 +82,7 @@ class Merchant(Entity):
   def buy_item(self,player):
     for i in range(len(self.inventory)):
       print(i,"-",self.inventory[i].name,", cost :",self.inventory[i].price , "$")
-    print("choose an item to buy")
+    print("Choose an item to buy")
     print("Write exit to leave")
     choice = input()
     if choice == "":
@@ -101,8 +101,8 @@ class Merchant(Entity):
       player.inventory.append(Item)
       self.inventory.remove(Item)
     else:
-      print("you don't have enough money")
-    print("do you want to keep buying?")
+      print("You don't have enough money")
+    print("Do you want to keep buying?")
     print("y or n ? ( yes or no )")
     choix = str(input()).lower()
     if choix == "y":
@@ -189,7 +189,7 @@ class Player(Entity):
 
   def open_inventory(self):
     for i in range(len(self.inventory)):
-      print(i,":",self.inventory[i].name)
+      print("\033[1;37;40m",i,":",self.inventory[i].name)
     print("Which object do you want to use ?")
     print("Press 99 to exit")
     choice = input()
@@ -309,17 +309,17 @@ class Map():
       if self.wall_map(self.PosX,self.PosY+1) == False:
         self.PosY+=1
       else:
-        print("A wall is blocking the road")
+        print("\033[1;35;40m A wall is blocking the road")
     elif choice_direction == b"q" or choice_direction == b"Q": #Left
       if self.wall_map(self.PosX,self.PosY-1) == False:
         self.PosY-=1
       else:
-        print("A wall is blocking the road")
+        print("\033[1;35;40m A wall is blocking the road")
     elif choice_direction == b"z" or choice_direction == b"Z": #Up
       if self.wall_map(self.PosX+1,self.PosY) == False:
         self.PosX+=1
       else:
-        print("A wall is blocking the road")
+        print("\033[1;35;40m A wall is blocking the road")
     elif choice_direction == b"s" or choice_direction == b"S": #Down
       if self.wall_map(self.PosX-1,self.PosY) == False:
         self.PosX-=1
@@ -357,22 +357,22 @@ class Map():
       if X == 3:
         boss = "Guillaume"
         Reading(boss)
-        print("He is level 3")
+        print("\033[1;31;40m He is level 3")
       elif X == 5:
         boss = "Sofiane"
         Reading(boss)
-        print("He is level 5")
+        print("\033[1;31;40m He is level 5")
       elif X == 9:
         boss = "Antoine"
         Reading(boss)
-        print("He is level 5")
+        print("\033[1;31;40m He is level 5")
       elif X == 18:
         boss = "Paul"
         Reading(boss)
-        print("He is level 5")
+        print("\033[1;31;40m He is level 5")
       elif Y == 16:
         boss = "Zouina"
-        print("He is level 7")
+        print("She is level 7")
       killed = Fight(boss, P)
       if killed == True:
         self.map[X][Y] = 1
@@ -437,7 +437,16 @@ class Map():
         print("\033[1;37;40m You beated all the bosses")
         print("Janin: It wasn't me")
         print("Janin: It was my twin brother")
-        print("Your quest has ended, you can now walk freely and kill some monsters")
+        print("Your quest has ended")
+        print("")
+        print("")
+        print("Credit :")
+        print("")
+        print("Thanks for playing our game, it was made for a school project.")
+        print("By Alessandro Farajallah , Axel Senecal and Sambre Vandercoilden") 
+        print("")
+        print("")
+        sys.exit()
 
   #Check if the player doesn't go in a wall
   def wall_map(self,X,Y):
@@ -481,18 +490,29 @@ class Attack:
     print("\033[1;37;40m No critical hit")
     return entity.strength
 
+def Input_Fight():
+  choose = input()
+  print(choose)
+  while choose != "1" and choose != "2" and choose != "0":
+    print("Wrong input")
+    print("0 - attack")
+    print("1 - Run away and loose 10hp")
+    print("2 - Open inventory")
+    choose = input()
+  return choose
+
 def Fight(monster_name, P):
   monster = Monster(monster_name)
   print("You encounter ", monster_name)
   while monster.hp > 0 or P.hp > 0:
     print("")
-    print( monster.name," have ", monster.hp,"hp",monster.strength,"strength and",monster.defense,"defense")
+    print("\033[1;31;40m", monster.name," have ", monster.hp,"hp",monster.strength,"strength and",monster.defense,"defense")
     print("You have ", P.hp,"hp",P.strength,"strength and",P.defense,"defense,what do you want to do ?")
     print("You can :")
     print("0 - attack")
     print("1 - Run away and loose 10hp")
     print("2 - Open inventory")
-    choose = input()
+    choose = Input_Fight()
     if choose == "0":
       player_attack(monster,P)
       if monster.hp <= 0:
