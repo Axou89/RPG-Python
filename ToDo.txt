@@ -1,6 +1,0 @@
-Un gameplay jouable 
-les combats #en cours
-deplacement entre les cases # done
-probabilité de faire spawn un monstre lors du déplacement #done
-Faire le marchand # done
-couleurs terminal # done
