@@ -83,7 +83,11 @@ class Merchant(Entity):
     for i in range(len(self.inventory)):
       print(i,"-",self.inventory[i].name,", cost :",self.inventory[i].price , "$")
     print("choose an item to buy")
-    choice = int(input())
+    choice = input()
+    if choice == "":
+      print("You entered nothing,try again")
+      self.buy_item(player)
+    choice = int(choice)
     Item = self.inventory[choice]
     if player.money >= Item.price:
       player.money = player.money-Item.price
@@ -173,6 +177,9 @@ class Player(Entity):
       super().__init__(name,65,20,7)
       self.inventory.append(Weapon("Arc",20,20,1))
       self.inventory.append(Item("healing potion","heal",50,5))
+    elif type_adventurer=="admin":
+      super().__init__(name,100,100,40)
+
 
   def open_inventory(self):
     for i in range(len(self.inventory)):
@@ -180,9 +187,14 @@ class Player(Entity):
     print("Which object do you want to use ?")
     print("Press 99 to exit")
     choice = input()
+    if choice == "":
+      print("You entered nothing,try again")
+      self.open_inventory()
+    choice = int(choice)
     if choice == 99:
       print("Leaving inventory")
       return
+
     while len(self.inventory)-1 < choice:
       print("You have entered an invalid value, try again")
       self.open_inventory()
@@ -360,7 +372,7 @@ class Map():
         print("He is level 10")
       killed = Fight(boss, P)
       if killed == True:
-        count_boss += 1
+        count_boss = count_boss+1
         self.map[X][Y] = 1
         self.map[X-2][Y-2] = 1
         self.map[X-2][Y-1] = 1
@@ -551,7 +563,7 @@ def main():
   Nom = str(input())
   print("Choose a class between :'Assassin','Archer' and 'Warrior' ")
   type_adventurer = str(input()).lower()
-  if type_adventurer != "assassin" and type_adventurer != "archer" and type_adventurer != "warrior":
+  if type_adventurer != "assassin" and type_adventurer != "archer" and type_adventurer != "warrior" and type_adventurer !="admin":
     print("Error, no such class")
     exit()
   P = Player(Nom,type_adventurer)
