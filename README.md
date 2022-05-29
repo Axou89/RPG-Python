@@ -37,7 +37,10 @@ Map = 20 x 22:
       [0,1,2,2,2,2,2,1,4,1,8,8,1,1,2,2,0,1,1,0],#19
       [0,1,2,2,2,2,2,1,1,1,8,8,1,1,1,1,0,1,1,0],#20
       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]#21
- 
+
+## Cheats
+you can choose a secret class at the beginning , just enter "admin" when you have to choose your class and will have big stat
+( 100 in each )
 ## Authors
 
 - [@AFARAJALLAH](https://github.com/aless124)
