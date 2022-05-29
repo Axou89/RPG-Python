@@ -38,9 +38,24 @@ Map = 20 x 22:
       [0,1,2,2,2,2,2,1,1,1,8,8,1,1,1,1,0,1,1,0],#20
       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]#21
 
+Merchant position:
+        10:13
+        4:14
+Boss position:
+        5:3
+        17:5
+        6:9
+        19:17
+        4:18
+Stairs position:
+        18:12
+        4:13
+Door position:
+        1:1
 ## Cheats
 you can choose a secret class at the beginning , just enter "admin" when you have to choose your class and will have big stat
 ( 100 in each )
+
 ## Authors
 
 - [@AFARAJALLAH](https://github.com/aless124)
