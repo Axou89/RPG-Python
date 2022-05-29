@@ -44,11 +44,11 @@ Merchant position:
         4:14
 Boss position:
 
-        5:3
-        17:5
-        6:9
-        19:17
-        4:18
+        3:5
+        5:14
+        9:6
+        17:19
+        18:4
 Stairs position:
 
         18:12

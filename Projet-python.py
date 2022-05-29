@@ -83,10 +83,15 @@ class Merchant(Entity):
     for i in range(len(self.inventory)):
       print(i,"-",self.inventory[i].name,", cost :",self.inventory[i].price , "$")
     print("choose an item to buy")
+    print("Write exit to leave")
     choice = input()
     if choice == "":
       print("You entered nothing,try again")
       self.buy_item(player)
+    check = choice.lower()
+    if check == "exit":
+      print("You leave the merchant alone")
+      return
     choice = int(choice)
     Item = self.inventory[choice]
     if player.money >= Item.price:
@@ -99,7 +104,7 @@ class Merchant(Entity):
       print("you don't have enough money")
     print("do you want to keep buying?")
     print("y or n ? ( yes or no )")
-    choix = str(input())
+    choix = str(input()).lower()
     if choix == "y":
      self.buy_item(player)
     else:
@@ -161,10 +166,11 @@ class Monster(Entity):
 '''
 class Player(Entity):  
   def __init__(self,name,type_adventurer):
-    self.type_adenturer = type_adventurer
+    self.type_adventurer = type_adventurer
     self.inventory = []
     self.level = 1
     self.xp = 0
+    self.boss_count = 4
     if type_adventurer == "warrior":     ## bcp de vie , peu d'attack
       super().__init__(name,80,15,10)
       self.inventory.append(Weapon("Sword",15,5,1))
@@ -294,10 +300,10 @@ class Map():
     self.PosY = 1
 
   #Movement
-  def move_map(self,P,count_boss):
+  def move_map(self,P):
     import msvcrt
     print("You are at the position :",self.PosX,";",self.PosY)
-    self.action_map(self.PosX,self.PosY,P,count_boss)
+    self.action_map(self.PosX,self.PosY,P)
     choice_direction = msvcrt.getch()
     if choice_direction == b"d" or choice_direction == b"D": #Right
       if self.wall_map(self.PosX,self.PosY+1) == False:
@@ -323,7 +329,7 @@ class Map():
       return True
 
   #Action to execute for each case (map)
-  def action_map(self,X,Y,P,count_boss):
+  def action_map(self,X,Y,P):
     if P.hp <= 0:
       print("You have,",P.hp,"hp,you lose the game")
       sys.exit()
@@ -367,12 +373,8 @@ class Map():
       elif Y == 16:
         boss = "Zouina"
         print("He is level 7")
-      elif Y == 18:
-        boss = "Janin"
-        print("He is level 10")
       killed = Fight(boss, P)
       if killed == True:
-        count_boss = count_boss+1
         self.map[X][Y] = 1
         self.map[X-2][Y-2] = 1
         self.map[X-2][Y-1] = 1
@@ -398,6 +400,8 @@ class Map():
         self.map[X+2][Y] = 1
         self.map[X+2][Y+1] = 1
         self.map[X+2][Y+2] = 1
+        P.boss_count += 1
+        print("You have killed : ",P.boss_count, "boss")
     if self.map[X][Y] == 4:
       print("\033[1;33;40m You find a chest")
       P.money += 5
@@ -409,7 +413,7 @@ class Map():
       print("\033[1;32;40m You find stairs")
       print("\033[1;32;40m Do you want to take them ?")
       print("\033[1;32;40m yes ? no ?")
-      Answer = str(input())
+      Answer = str(input()).lower()
       if Answer == "yes":
         if self.PosX == 12:
           self.PosX = 13
@@ -423,9 +427,10 @@ class Map():
       merchant = Merchant("johnny",100)
       merchant.buy_item(P)
     if self.map[X][Y] == 8:
-      self.door_map(count_boss)
+      self.door_map(P)
     if self.map[X][Y] == 9:
       print("You finally locate Janin")
+      print("He is level 10")
       Fight("Janin", P)
 
   #Check if the player doesn't go in a wall
@@ -436,8 +441,8 @@ class Map():
       return False
 
   #Unlock the last boss
-  def door_map(self, count_boss):
-    if count_boss >= 4:
+  def door_map(self,P):
+    if P.boss_count >= 4:
         print("You killed the 4 bosses, now you can open the door")
         return False
     else:
@@ -461,7 +466,7 @@ class Attack:
     from random import randint
     R = randint(0,100)
     if R < entity.critical_chance:
-      if type(entity) == Player and self.type_adventurer == "Assassin":
+      if type(entity) == Player and entity.type_adventurer == "Assassin":
         print("critical hit ! 3x damage because you are an assassin")
         return entity.strength *3
       print("critical hit ! 2x damage ")
@@ -556,7 +561,6 @@ def main():
   import keyboard
   Win = 0
   end = False
-  count_boss = 0
   map = Map()
 
   print("What is your name ? ")
@@ -598,7 +602,7 @@ def main():
  #     print(Inventaire)  # affiche l'inventaire
  #  if keyboard.read_key() =="h" or keyboard.read_key() == "H":
  #     print(Tuto)     # affiche le tuto 
-    map.move_map(P,count_boss)
+    map.move_map(P)
     
     
 
