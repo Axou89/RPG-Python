@@ -336,7 +336,7 @@ class Map():
       return True   ## Censé quitter le jeu , marche pas   
     from random import randint
     if self.map[X][Y] == 1:
-      random_number = randint(1,20)
+      random_number = randint(1,15)
       if random_number == 1:
         print("\033[1;34;40m You encounter a monster")
         random_number = randint(1,3)
@@ -453,6 +453,7 @@ class Map():
         return False
     else:
       print("The door seems locked")
+      print("There are 4 padlocks")
       self.PosY-=1
       print("You are at the position :",self.PosX,";",self.PosY)
       return True
